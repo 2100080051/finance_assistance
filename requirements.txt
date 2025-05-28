@@ -1,12 +1,6 @@
-# Core Frameworks
-fastapi
-uvicorn
-streamlit
 python-dotenv
 requests
 pydantic
-
-# AI and NLP
 openai
 langchain
 langgraph
@@ -14,13 +8,19 @@ tiktoken
 transformers
 sentence-transformers
 faiss-cpu
-
-# Web Scraping
 beautifulsoup4
 lxml
-
-# Voice STT & TTS
 whisper
 pyttsx3
 sounddevice
 SpeechRecognition
+fastapi<0.104
+uvicorn
+streamlit
+requests
+pydantic<2.0.0
+sentence-transformers
+transformers
+gtts
+langchain
+
