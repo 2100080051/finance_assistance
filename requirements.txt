@@ -24,4 +24,5 @@ sentence-transformers
 transformers
 gtts
 langchain
+matplotlib
 
