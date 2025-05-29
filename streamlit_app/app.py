@@ -37,11 +37,11 @@ stock_symbol = stock_options[country][stock_name]
 # Step 4: User query
 query = st.text_input("Enter your financial question", "What is the current stock price?")
 
-# Step 5: Send request to FastAPI
+# Step 5: Send request to FastAPI backend on Hugging Face
 if st.button("Ask"):
     with st.spinner("Thinking... 🤖"):
         try:
-            url = "http://127.0.0.1:8000/ask"
+            url = "https://nani2906-my-fastapi-backend.hf.space/ask"  # ✅ Updated URL
             headers = {"Content-Type": "application/json"}
             payload = json.dumps({"query": query, "stock_symbol": stock_symbol})
 
