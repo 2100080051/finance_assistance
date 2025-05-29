@@ -5,14 +5,17 @@ import yfinance as yf
 import matplotlib.pyplot as plt
 import pandas as pd
 
+# Update with your Hugging Face FastAPI backend URL
+API_URL = "https://nikdhith2906-finance-assistant-backend.hf.space/ask"
+
 st.set_page_config(page_title="🧠💬 AI Finance Assistant", layout="wide")
 st.title("🧠💬 AI Finance Assistant")
 st.write("Ask anything about a company's stock and get insights with voice support.")
 
-# Step 1: Country selector
+# Country selection
 country = st.selectbox("Select Country", ["United States", "India"], index=0)
 
-# Step 2: Define stock options based on country
+# Stock options by country
 stock_options = {
     "United States": {
         "Apple (AAPL)": "AAPL",
@@ -22,34 +25,31 @@ stock_options = {
         "Amazon (AMZN)": "AMZN"
     },
     "India": {
-        "Reliance Industries (RELIANCE.NS)": "RELIANCE.NS",
-        "Tata Consultancy Services (TCS.NS)": "TCS.NS",
+        "Reliance (RELIANCE.NS)": "RELIANCE.NS",
+        "TCS (TCS.NS)": "TCS.NS",
         "Infosys (INFY.NS)": "INFY.NS",
         "HDFC Bank (HDFCBANK.NS)": "HDFCBANK.NS",
         "ICICI Bank (ICICIBANK.NS)": "ICICIBANK.NS"
     }
 }
 
-# Step 3: Stock dropdown based on selected country
+# Stock selection
 stock_name = st.selectbox("Select Stock", list(stock_options[country].keys()))
 stock_symbol = stock_options[country][stock_name]
 
-# Step 4: User query
+# User query
 query = st.text_input("Enter your financial question", "What is the current stock price?")
 
-# Step 5: Send request to FastAPI backend on Hugging Face
+# Ask button
 if st.button("Ask"):
     with st.spinner("Thinking... 🤖"):
         try:
-            url = "https://nani2906-my-fastapi-backend.hf.space/ask"  # ✅ Updated URL
             headers = {"Content-Type": "application/json"}
             payload = json.dumps({"query": query, "stock_symbol": stock_symbol})
-
-            response = requests.post(url, headers=headers, data=payload, timeout=90)
+            response = requests.post(API_URL, headers=headers, data=payload, timeout=90)
 
             if response.status_code == 200:
                 result = response.json()
-
                 st.subheader("📈 Stock Data")
                 st.json(result.get("stock_data", {}))
 
@@ -65,11 +65,10 @@ if st.button("Ask"):
                 st.success(result.get("summary", "No summary available."))
             else:
                 st.error(f"❌ API returned status code {response.status_code}")
-
         except requests.exceptions.RequestException as e:
             st.error(f"🚨 Something went wrong: {e}")
 
-# Step 6: Optional Charts
+# Optional charts
 st.markdown("---")
 st.subheader("📊 Stock Price Chart (Last 30 Days)")
 try:
@@ -78,6 +77,6 @@ try:
         st.line_chart(df['Close'], use_container_width=True)
         st.bar_chart(df['Volume'], use_container_width=True)
     else:
-        st.warning("No historical data available for this stock.")
+        st.warning("No historical data available.")
 except Exception as e:
     st.error(f"⚠️ Could not load chart data: {e}")
