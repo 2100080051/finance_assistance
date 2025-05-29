@@ -1,16 +1,5 @@
-fastapi==0.103.2
-uvicorn==0.23.2
-requests==2.31.0
-sentence-transformers==2.5.1
-transformers==4.39.3
-beautifulsoup4==4.12.3
-pydantic==1.10.12
-yfinance
 streamlit
 requests
+yfinance
 matplotlib
 pandas
-scikit-learn==1.2.2
-
-
-
