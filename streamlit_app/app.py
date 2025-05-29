@@ -6,7 +6,8 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 # Update with your Hugging Face FastAPI backend URL
-API_URL = "https://nikdhith2906-finance-assistant-backend.hf.space/ask"
+ url = "https://nani2906-my-fastapi-backend.hf.space/ask"
+
 
 st.set_page_config(page_title="🧠💬 AI Finance Assistant", layout="wide")
 st.title("🧠💬 AI Finance Assistant")
