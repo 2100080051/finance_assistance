@@ -39,12 +39,7 @@ stock_symbol = stock_options[country][stock_name]
 query = st.text_input("❓ Enter your financial question", "What is the current stock price?")
 
 # Step 5: Send request to FastAPI backend
-if "audio_url" in result:
-    audio_response = requests.get(f"https://nani2906-my-fastapi-backend.hf.space{result['audio_url']}")
-    if audio_response.status_code == 200:
-        st.audio(audio_response.content, format="audio/mp3")
-    else:
-        st.warning("⚠️ Audio file not available.")
+
 
 if st.button("🚀 Ask"):
     with st.spinner("Thinking... 🤖"):
