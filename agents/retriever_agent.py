@@ -10,7 +10,7 @@ import os
 class RetrieverAgent:
     def __init__(self, docs_path="docs_data", index_path="vector_index"):
         import os
-        project_root = os.path.dirname(os.path.dirname(__file__))  # go up from /agents/
+        project_root = os.path.dirname(os.path.dirname(__file__))  
         self.docs_path = os.path.join(project_root, docs_path)
         self.index_path = os.path.join(project_root, index_path)
         self.model = SentenceTransformer('all-MiniLM-L6-v2')
@@ -48,7 +48,7 @@ class RetrieverAgent:
         self.index = faiss.IndexFlatL2(embeddings.shape[1])
         self.index.add(embeddings)
 
-        # Save index and metadata
+      
         faiss.write_index(self.index, os.path.join(self.index_path, "faiss.index"))
         with open(os.path.join(self.index_path, "docs.pkl"), "wb") as f:
             pickle.dump(self.documents, f)
@@ -60,11 +60,11 @@ class RetrieverAgent:
         results = []
         for i in I[0]:
             if i < len(self.documents):
-                results.append(self.documents[i]["content"][:500])  # Return first 500 chars
+                results.append(self.documents[i]["content"][:500])  
 
         return results
 
-# Test
+
 if __name__ == "__main__":
     agent = RetrieverAgent()
     response = agent.query("What is Apple's revenue?")
