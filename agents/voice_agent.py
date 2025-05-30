@@ -1,4 +1,4 @@
-# agents/voice_agent.py
+
 
 import pyttsx3
 import speech_recognition as sr
@@ -31,7 +31,7 @@ class VoiceAgent:
         self.tts_engine.say(text)
         self.tts_engine.runAndWait()
 
-# Test
+
 if __name__ == "__main__":
     agent = VoiceAgent()
     query = agent.get_user_input()
