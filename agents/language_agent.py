@@ -10,7 +10,7 @@ class LanguageAgent:
     def __init__(self):
         self.client = OpenAI(
             api_key=os.getenv("OPENAI_API_KEY"),
-            base_url=os.getenv("OPENAI_BASE_URL")  # Required for Groq
+            base_url=os.getenv("OPENAI_BASE_URL")  
         )
 
     def generate_summary(self, stock_data, news_data, doc_chunks):
@@ -33,7 +33,7 @@ class LanguageAgent:
         """
 
         response = self.client.chat.completions.create(
-            model="llama3-8b-8192",  # or "mixtral-8x7b-32768", etc.
+            model="llama3-8b-8192",  
             messages=[{"role": "user", "content": prompt}],
             temperature=0.7,
         )
@@ -41,7 +41,7 @@ class LanguageAgent:
         return response.choices[0].message.content.strip()
 
 
-# Test
+
 if __name__ == "__main__":
     dummy_stock = {"symbol": "AAPL", "price": 195.3, "open": 193.6}
     dummy_news = [{"title": "Apple hits all-time high"}, {"title": "Nvidia dominates AI market"}]
