@@ -7,10 +7,10 @@ st.set_page_config(page_title="🧠💬 AI Finance Assistant", layout="wide")
 st.title("🧠💬 AI Finance Assistant")
 st.write("Ask anything about a company's stock and get insights with voice support.")
 
-# Step 1: Country selector
-country = st.selectbox("Select Country", ["United States", "India"], index=0)
+# Country selector
+country = st.selectbox("Select Country", ["United States", "India"])
 
-# Step 2: Define stock options based on country
+# Stock symbols
 stock_options = {
     "United States": {
         "Apple (AAPL)": "AAPL",
@@ -28,22 +28,22 @@ stock_options = {
     }
 }
 
-# Step 3: Stock dropdown based on selected country
 stock_name = st.selectbox("Select Stock", list(stock_options[country].keys()))
 stock_symbol = stock_options[country][stock_name]
 
-# Step 4: User query
 query = st.text_input("Enter your financial question", "What is the current stock price?")
 
-# Step 5: Send request to FastAPI
 if st.button("Ask"):
-    with st.spinner("Thinking... 🤖"):
+    with st.spinner("🤖 Thinking..."):
         try:
-            url = "https://nani2906-my-fastapi-backend.hf.space/ask"  # Your Hugging Face FastAPI backend URL
+            url = "https://nani2906-my-fastapi-backend.hf.space/ask"  # Your deployed backend URL
+            payload = json.dumps({
+                "query": query,
+                "stock_symbol": stock_symbol
+            })
             headers = {"Content-Type": "application/json"}
-            payload = json.dumps({"query": query, "stock_symbol": stock_symbol})
 
-            response = requests.post(url, headers=headers, data=payload, timeout=90)
+            response = requests.post(url, data=payload, headers=headers, timeout=90)
 
             if response.status_code == 200:
                 result = response.json()
@@ -52,8 +52,8 @@ if st.button("Ask"):
                 st.json(result.get("stock_data", {}))
 
                 st.subheader("📰 Latest News")
-                for news_item in result.get("news", []):
-                    st.markdown(f"- {news_item}")
+                for news in result.get("news", []):
+                    st.markdown(f"- {news}")
 
                 st.subheader("📄 Relevant Documents")
                 for doc in result.get("documents", []):
@@ -63,21 +63,20 @@ if st.button("Ask"):
                 summary = result.get("summary", "No summary available.")
                 st.success(summary)
 
-                # 🎧 Audio Playback (from backend)
-                audio_data = result.get("audio", None)
+                audio_data = result.get("audio")
                 if audio_data:
                     st.subheader("🔊 Voice Summary")
                     st.audio(audio_data.encode("ISO-8859-1"), format="audio/mp3")
                 else:
-                    st.warning("⚠️ Could not fetch audio.")
+                    st.warning("⚠️ Audio not available.")
 
             else:
-                st.error(f"❌ API returned status code {response.status_code}")
+                st.error(f"❌ Error: {response.status_code} - {response.text}")
 
         except requests.exceptions.RequestException as e:
-            st.error(f"🚨 Something went wrong: {e}")
+            st.error(f"🚨 Request failed: {e}")
 
-# Step 6: Optional Charts
+# Charts
 st.markdown("---")
 st.subheader("📊 Stock Price Chart (Last 30 Days)")
 try:
@@ -86,6 +85,6 @@ try:
         st.line_chart(df['Close'], use_container_width=True)
         st.bar_chart(df['Volume'], use_container_width=True)
     else:
-        st.warning("No historical data available for this stock.")
+        st.warning("📉 No chart data available.")
 except Exception as e:
-    st.error(f"⚠️ Could not load chart data: {e}")
+    st.error(f"⚠️ Error loading chart: {e}")
