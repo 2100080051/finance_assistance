@@ -2,15 +2,15 @@ import streamlit as st
 import requests
 import json
 import yfinance as yf
-import pandas as pd
 
 st.set_page_config(page_title="🧠💬 AI Finance Assistant", layout="wide")
 st.title("🧠💬 AI Finance Assistant")
 st.write("Ask anything about a company's stock and get insights with voice support.")
 
-# Country and stock selector
+# Step 1: Country selector
 country = st.selectbox("Select Country", ["United States", "India"], index=0)
 
+# Step 2: Define stock options based on country
 stock_options = {
     "United States": {
         "Apple (AAPL)": "AAPL",
@@ -28,19 +28,18 @@ stock_options = {
     }
 }
 
+# Step 3: Stock dropdown based on selected country
 stock_name = st.selectbox("Select Stock", list(stock_options[country].keys()))
 stock_symbol = stock_options[country][stock_name]
 
+# Step 4: User query
 query = st.text_input("Enter your financial question", "What is the current stock price?")
 
-# Base URL for backend
-API_BASE = "https://nani2906-my-fastapi-backend.hf.space"
-
-# Call backend
+# Step 5: Send request to FastAPI
 if st.button("Ask"):
     with st.spinner("Thinking... 🤖"):
         try:
-            url = f"{API_BASE}/ask"
+            url = "https://nani2906-my-fastapi-backend.hf.space/ask"  # Backend URL
             headers = {"Content-Type": "application/json"}
             payload = json.dumps({"query": query, "stock_symbol": stock_symbol})
 
@@ -61,16 +60,16 @@ if st.button("Ask"):
                     st.markdown(f"- {doc}")
 
                 st.subheader("🧠 Summary")
-                st.success(result.get("summary", "No summary available."))
+                summary = result.get("summary", "No summary available.")
+                st.success(summary)
 
-                # 🔊 Audio Playback
-                audio_url = f"{API_BASE}/audio"
-                audio_response = requests.get(audio_url)
-                if audio_response.status_code == 200:
-                    st.subheader("🔊 Audio Summary")
-                    st.audio(audio_response.content, format="audio/mp3")
-                else:
-                    st.warning("⚠️ Could not fetch audio.")
+                # 🔊 Voice output via JavaScript in the browser
+                st.markdown(f"""
+                <script>
+                var msg = new SpeechSynthesisUtterance({json.dumps(summary)});
+                window.speechSynthesis.speak(msg);
+                </script>
+                """, unsafe_allow_html=True)
 
             else:
                 st.error(f"❌ API returned status code {response.status_code}")
@@ -78,7 +77,7 @@ if st.button("Ask"):
         except requests.exceptions.RequestException as e:
             st.error(f"🚨 Something went wrong: {e}")
 
-# Charts
+# Step 6: Optional Charts
 st.markdown("---")
 st.subheader("📊 Stock Price Chart (Last 30 Days)")
 try:
