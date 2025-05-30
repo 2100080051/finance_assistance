@@ -20,7 +20,6 @@ class ScrapingAgent:
         response = requests.get(self.base_url, headers=headers)
         soup = BeautifulSoup(response.text, "html.parser")
 
-        # More reliable selector using section headlines
         headlines = soup.find_all("a", href=True)
         news_items = []
 
@@ -28,7 +27,7 @@ class ScrapingAgent:
             href = tag["href"]
             title = tag.get_text().strip()
 
-            # Filter proper news articles
+         
             if "/news/" in href and title and len(title) > 20:
                 link = f"https://finance.yahoo.com{href}" if href.startswith("/") else href
                 news_items.append({"title": title, "url": link})
@@ -38,7 +37,7 @@ class ScrapingAgent:
 
         return news_items
 
-# Test run
+
 if __name__ == "__main__":
     agent = ScrapingAgent()
     headlines = agent.get_news_headlines()
