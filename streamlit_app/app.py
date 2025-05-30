@@ -7,10 +7,10 @@ st.set_page_config(page_title="🧠💬 AI Finance Assistant", layout="wide")
 st.title("🧠💬 AI Finance Assistant")
 st.write("Ask anything about a company's stock and get insights with voice support.")
 
-# Country selector
+
 country = st.selectbox("Select Country", ["United States", "India"])
 
-# Stock symbols
+
 stock_options = {
     "United States": {
         "Apple (AAPL)": "AAPL",
@@ -36,7 +36,7 @@ query = st.text_input("Enter your financial question", "What is the current stoc
 if st.button("Ask"):
     with st.spinner("🤖 Thinking..."):
         try:
-            url = "https://nani2906-my-fastapi-backend.hf.space/ask"  # Your deployed backend URL
+            url = "https://nani2906-my-fastapi-backend.hf.space/ask" 
             payload = json.dumps({
                 "query": query,
                 "stock_symbol": stock_symbol
@@ -76,7 +76,7 @@ if st.button("Ask"):
         except requests.exceptions.RequestException as e:
             st.error(f"🚨 Request failed: {e}")
 
-# Charts
+
 st.markdown("---")
 st.subheader("📊 Stock Price Chart (Last 30 Days)")
 try:
