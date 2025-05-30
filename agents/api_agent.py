@@ -1,4 +1,3 @@
-# agents/api_agent.py
 
 import yfinance as yf
 
@@ -19,7 +18,7 @@ class APIFinanceAgent:
         }
 
 
-# Test it directly
+
 if __name__ == "__main__":
     agent = APIFinanceAgent()
     data = agent.get_stock_data("AAPL")
