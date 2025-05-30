@@ -39,7 +39,7 @@ query = st.text_input("Enter your financial question", "What is the current stoc
 if st.button("Ask"):
     with st.spinner("Thinking... 🤖"):
         try:
-            url = "https://nani2906-my-fastapi-backend.hf.space/ask"  # Backend URL
+            url = "https://nani2906-my-fastapi-backend.hf.space/ask"  # Your Hugging Face FastAPI backend URL
             headers = {"Content-Type": "application/json"}
             payload = json.dumps({"query": query, "stock_symbol": stock_symbol})
 
@@ -63,13 +63,13 @@ if st.button("Ask"):
                 summary = result.get("summary", "No summary available.")
                 st.success(summary)
 
-                # 🔊 Voice output via JavaScript in the browser
-                st.markdown(f"""
-                <script>
-                var msg = new SpeechSynthesisUtterance({json.dumps(summary)});
-                window.speechSynthesis.speak(msg);
-                </script>
-                """, unsafe_allow_html=True)
+                # 🎧 Audio Playback (from backend)
+                audio_data = result.get("audio", None)
+                if audio_data:
+                    st.subheader("🔊 Voice Summary")
+                    st.audio(audio_data.encode("ISO-8859-1"), format="audio/mp3")
+                else:
+                    st.warning("⚠️ Could not fetch audio.")
 
             else:
                 st.error(f"❌ API returned status code {response.status_code}")
